@@ -221,7 +221,7 @@ public class Extent implements Writable
             final double x,
             final double y)
     {
-        return xmin <= x && ymin <= y && xmax >= x && ymax >= y;
+        return xmin <= x && ymin <= y && x <= xmax && y <= ymax;
     }
 
     /**

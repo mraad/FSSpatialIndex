@@ -5,6 +5,7 @@ import com.esri.hadoop.MiniFS;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
@@ -184,11 +185,15 @@ public class HadoopQuadTreeTest extends MiniFS
     {
         final int N = 10000;
 
+        final Random random = new Random();
         openOutputStream();
-        final FSQuadTreeWriter writer = new FSQuadTreeWriter(m_dataOutputStream, 128, new Extent(0, 0, 50, 50));
+        final FSQuadTreeWriter writer = new FSQuadTreeWriter(m_dataOutputStream, 128, new Extent(-180, -90, 180, 90));
         for (int i = 0; i < N; i++)
         {
-            writer.addPointData(new PointData(Math.random() * 100, Math.random() * 100, (long) Math.random() * 100));
+            writer.addPointData(new PointData(
+                    -180.0 + 360.0 * random.nextDouble(),
+                    -90.0 + 180.0 * random.nextDouble(),
+                    i));
         }
         writer.addPointData(new PointData(20, 20, 30));
         writer.addPointData(new PointData(80, 20, 80));
@@ -219,9 +224,9 @@ public class HadoopQuadTreeTest extends MiniFS
 
         System.out.println("Time to write " + N + " Points (ms) = " + (t2 - t1));
         System.out.println("Time to search " + N + " Points (ms) = " + (t4 - t3));
-        // System.out.println("Found " + evalFunc.count + "  Points.");
+        System.out.println("Found " + evalFunc.count + " Points.");
         System.out.println("Time to Iterator search " + N + " Points (ms) = " + (t5 - t4));
-        // System.out.println("Iterator Found " + count + "  Points.");
+        System.out.println("Iterator Found " + count + " Points.");
 
         assertEquals(evalFunc.count, count);
         //reader.DFS(new printDFS());
